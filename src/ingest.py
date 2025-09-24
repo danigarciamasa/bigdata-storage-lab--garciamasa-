@@ -15,18 +15,22 @@ def tag_lineage(df: pd.DataFrame, source_name: str) -> pd.DataFrame:
     return df
 
 
-def concat_bronze(frames: List[pd.DataFrame]) -> pd.DataFrame:
+def concat_bronze(frames: list[pd.DataFrame]) -> pd.DataFrame:
     """
     Concatena múltiples DataFrames Bronze y asegura el esquema:
     date, partner, amount, source_file, ingested_at.
     """
+    cols = ["date", "partner", "amount", "source_file", "ingested_at"]
+
     if not frames:
-        return pd.DataFrame(columns=["date", "partner", "amount", "source_file", "ingested_at"])
+        return pd.DataFrame(columns=cols)
 
     bronze = pd.concat(frames, ignore_index=True)
 
-    # Reordenar columnas según esquema
-    cols = ["date", "partner", "amount", "source_file", "ingested_at"]
-    bronze = bronze[cols]
+    # Asegurar que todas las columnas existen
+    for c in cols:
+        if c not in bronze.columns:
+            bronze[c] = pd.NA
 
+    bronze = bronze[cols]
     return bronze
