@@ -1,8 +1,5 @@
 # bigdata-storage-lab--garciamasa-
 
-Aquí tienes un README inicial en formato Markdown para tu laboratorio:
-
-```markdown
 # De CSVs heterogéneos a un almacén analítico confiable  
 Repositorio: `bigdata-storage-lab-<apellido>`
 
@@ -11,33 +8,37 @@ Repositorio: `bigdata-storage-lab-<apellido>`
 ## 🎯 Objetivo
 El propósito de este laboratorio es construir un flujo completo de datos que permita transformar **CSVs heterogéneos** en un **almacén analítico confiable**. El pipeline deberá cubrir las siguientes etapas:
 
-1. **Ingesta** → Carga de archivos CSV de diferentes fuentes y estructuras.  
-2. **Validación** → Revisión de formatos, tipos y detección de valores faltantes/inconsistentes.  
-3. **Normalización** → Estandarización de columnas, formatos de fecha, codificación de categorías y manejo de nulos.  
+1. **Ingesta** → carga de archivos CSV de diferentes fuentes y estructuras.  
+2. **Validación** → revisión de formatos, tipos y detección de valores faltantes/inconsistentes.  
+3. **Normalización** → estandarización de columnas, fechas, categorías y nulos.  
 4. **Bronze / Silver Layers** →  
    - *Bronze*: datos crudos validados.  
-   - *Silver*: datos transformados y listos para análisis.  
-5. **KPIs** → Cálculo de métricas clave (ejemplo: registros válidos vs. inválidos, cobertura de campos obligatorios, volumen de ingesta semanal).  
+   - *Silver*: datos transformados al esquema canónico.  
+5. **KPIs** → métricas clave: % de registros válidos, volumen de ingesta, cobertura de campos obligatorios.
 
 ---
 
 ## 📦 Entregables
 - **Repositorio GitHub público** con:  
-  - Código del pipeline de ingesta y normalización.  
+  - Código del pipeline de ingesta, validación y normalización.  
   - Estructura clara de carpetas (`/src`, `/data`, `/docs`).  
-  - README documentando diseño y decisiones técnicas.  
+  - README documentando decisiones técnicas y justificación con las **5V**.  
 - **Aplicación en Streamlit** para:  
-  - Visualizar KPIs de calidad y volumen de datos.  
-  - Explorar tablas *silver*.  
-  - Mostrar evolución de las métricas.  
+  - Subida de múltiples CSV heterogéneos.  
+  - Validación automática y exploración de datos en Bronze.  
+  - Agregación partner×mes en Silver.  
+  - Visualización de KPIs y gráfico de evolución.  
+  - Descarga de `bronze.csv` y `silver.csv`.
 
 ---
 
 ## ✅ Criterios de Evaluación
-1. **Diseño y justificación**: claridad en la arquitectura propuesta y razones de las decisiones.  
-2. **Calidad de datos**: correcto tratamiento de nulos, outliers, duplicados y consistencia de tipos.  
-3. **Trazabilidad / Data Warehouse**: adecuada separación *bronze/silver*, documentación de linaje y reproducibilidad del pipeline.  
-4. **Documentación**: README completo, diagramas simples y explicación del código.  
+1. **Diseño y justificación**: claridad en la arquitectura propuesta y razones de las decisiones (3 pts).  
+2. **Calidad de datos**: correcto tratamiento de nulos, outliers, duplicados y consistencia de tipos (3 pts).  
+3. **Trazabilidad / Data Warehouse**: adecuada separación *bronze/silver*, linaje y reproducibilidad (2 pts).  
+4. **Documentación**: README completo, diccionario, gobernanza y capturas (2 pts).  
+
+**Total:** 10 puntos.
 
 ---
 
@@ -48,18 +49,74 @@ El propósito de este laboratorio es construir un flujo completo de datos que pe
 
 ---
 
-## ⏱️ Tiempo Estimado por Fase
+## ⏱️ Tiempo estimado por fase
 - Ingesta y validación: **3–4 h**  
-- Normalización y diseño *bronze/silver*: **4–5 h**  
+- Normalización y diseño Bronze/Silver: **4–5 h**  
 - Cálculo de KPIs y pruebas: **2–3 h**  
 - Desarrollo app Streamlit: **4–5 h**  
 - Documentación y preparación entrega: **2 h**  
 
-**Total estimado**: ~15–19 horas de trabajo.  
+**Total estimado:** 15–19 horas.
 
 ---
 
-✍️ **Instrucción**: Personaliza `<apellido>` en el nombre del repo antes de publicar.  
-```
+## 🧪 Checklist de entrega
+Ubicado en [`tests/checklist.md`](tests/checklist.md).  
+Incluye verificación de:  
+- URL Streamlit funcional,  
+- `bronze.csv` y `silver.csv` en `/data`,  
+- README con decisiones justificadas (5V),  
+- Capturas en `/docs/`,  
+- Diccionario y gobernanza completos.
 
-¿Quieres que además te genere un **diagrama simple en ASCII** (tipo arquitectura de datos: CSVs → Bronze → Silver → Streamlit) para incluirlo en el README?
+---
+
+## 📏 Rúbrica de evaluación (10 puntos)
+
+- **Diseño y justificación** — 3 pts  
+- **Calidad de datos** — 3 pts  
+- **Trazabilidad y DW** — 2 pts  
+- **Documentación** — 2 pts  
+
+Detalle completo en [`docs/rubrica.md`](docs/rubrica.md).
+
+---
+
+## 📖 Documentación asociada
+- [`docs/diccionario.md`](docs/diccionario.md) → esquema canónico (`date`, `partner`, `amount`) y mapeos origen.  
+- [`docs/gobernanza.md`](docs/gobernanza.md) → linaje, validaciones mínimas, mínimos privilegios, trazabilidad, roles.  
+
+---
+
+## 🧠 Prompts de Reflexión
+
+Responde en este mismo README o en un archivo aparte, en 3–5 líneas máximo cada uno.
+
+1. **V dominante hoy y V dominante si 2× tráfico**  
+   - Hoy la **Variedad** es dominante, porque los CSVs llegan con distintos esquemas y la normalización ocupa la mayor parte del esfuerzo.  
+   - Si el tráfico se duplicase, la **Velocidad** pasaría a ser el reto principal: procesar en menos tiempo y mantener los SLA de actualización.  
+   - La arquitectura debería priorizar pipelines más paralelos o almacenamiento columnar para sostener ese ritmo.
+
+2. **Trade-off elegido (ej. más compresión vs CPU)**  
+   - Elegí priorizar **más compresión** en Parquet frente a menos uso de CPU.  
+   - Esto reduce significativamente el espacio en disco y el tiempo de lectura en consultas repetidas.  
+   - Lo mediré comparando tamaño de archivos y benchmarks de lectura/escritura en CSV vs Parquet.
+
+3. **Por qué “inmutable + linaje” mejora veracidad y qué coste añade**  
+   - Inmutabilidad asegura que los datos no se alteran una vez registrados; el linaje permite rastrear su procedencia.  
+   - Esto mejora la **veracidad**, porque cada resultado puede verificarse contra su fuente original.  
+   - El coste añadido es mayor uso de almacenamiento y complejidad de logs/versionado.
+
+4. **KPI principal y SLA del dashboard (latencia)**  
+   - KPI principal: **Total amount mensual por partner**.  
+   - SLA: dashboard actualizado cada **24 horas**.  
+   - Este KPI habilita decisiones sobre facturación y previsión de ingresos, y esa latencia es suficiente porque el negocio no requiere granularidad en tiempo real.
+
+5. **Riesgo principal del diseño y mitigación técnica concreta**  
+   - Riesgo: **inconsistencias de codificación y formatos de origen** que provoquen errores de ingesta.  
+   - Mitigación: fallback de encoding (`utf-8` → `latin-1`), validaciones tempranas en Bronze y estandarización de esquema canónico.  
+   - De esta forma, los errores se aíslan en capas tempranas y no contaminan Silver ni Gold.
+
+---
+
+✍️ **Instrucción:** Personaliza `<apellido>` en el nombre del repo antes de publicar.
