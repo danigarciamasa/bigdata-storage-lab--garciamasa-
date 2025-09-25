@@ -8,7 +8,7 @@ Marque cada casilla al completar el punto. Incluya evidencias (enlaces o captura
 
 ## 2) Artefactos de datos
 - [ ] **bronze.csv** subido a `data/bronze/`  
-      Ruta/commit: ________________________________________________________
+      Ruta/commit: 
 - [ ] **silver.csv** subido a `data/silver/`  
       Ruta/commit: ________________________________________________________
 
