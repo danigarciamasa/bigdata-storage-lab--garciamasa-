@@ -125,38 +125,42 @@ Responde en este mismo README o en un archivo aparte, en 3–5 líneas máximo c
 
 Responde a cada punto en 3–5 líneas máximo, justificando con base en tu diseño y datos del laboratorio.
 
-1. **V dominante hoy y V dominante si 2× tráfico**  
-   - Respuesta:Hoy la Variedad es la V dominante, porque recibimos CSVs con esquemas distintos que requieren mappings y normalización.
+1. V dominante hoy y V dominante si 2× tráfico
+
+Hoy la Variedad es la V dominante, porque recibimos CSVs con esquemas distintos que requieren mappings y normalización.
 
 Si el tráfico se duplicase, la Velocidad se volvería prioritaria: habría que procesar más ficheros en menos tiempo.
 
 Esto exigiría optimizar la ingesta o pasar a formatos columnar (Parquet) para mantener los SLA.
 
-2. **Trade-off elegido (ej.: más compresión vs CPU)**  
-   - Respuesta: Elegí mayor compresión al guardar en Parquet, sacrificando algo de CPU en la escritura.
+2. Trade-off elegido (ej.: más compresión vs CPU)
+
+Elegí mayor compresión al guardar en Parquet, sacrificando algo de CPU en la escritura.
 
 El beneficio es menor espacio en disco y lecturas más rápidas en análisis repetidos.
 
 Lo mediría comparando tamaños de archivo y tiempos de carga frente a CSV.
 
-3. **Por qué “inmutable + linaje” mejora veracidad y qué coste añade**  
-   - Respuesta: Inmutabilidad evita alterar datos una vez ingeridos y el linaje permite rastrear su origen.
+3. Por qué “inmutable + linaje” mejora veracidad y qué coste añade
+
+Inmutabilidad evita alterar datos una vez ingeridos y el linaje permite rastrear su origen.
 
 Así se asegura que cualquier análisis puede verificarse contra la fuente.
 
 El coste es más almacenamiento y mantener metadatos de versión, lo que añade complejidad al pipeline.
 
-4. **KPI principal y SLA del dashboard (latencia)**  
-   - Respuesta: KPI: Total amount mensual por partner.
+4. KPI principal y SLA del dashboard (latencia)
+
+KPI: Total amount mensual por partner.
 
 SLA: actualización cada 24 horas, suficiente para decisiones de facturación y control de negocio.
 
 No se requiere tiempo real, pero sí consistencia y puntualidad en la actualización diaria.
 
-5. **Riesgo principal del diseño y mitigación técnica concreta**  
-   - Respuesta: Riesgo: inconsistencias en los nombres de columnas y formatos de origen que rompan la normalización.
+5. Riesgo principal del diseño y mitigación técnica concreta
+
+Riesgo: inconsistencias en los nombres de columnas y formatos de origen que rompan la normalización.
 
 Mitigación: usar mapeo dinámico en la app, validaciones tempranas y normalización robusta en Bronze.
 
 Así los errores se detectan antes de llegar a Silver/Gold y no contaminan el análisis.
-
