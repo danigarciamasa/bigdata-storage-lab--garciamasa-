@@ -10,7 +10,7 @@ Marque cada casilla al completar el punto. Incluya evidencias (enlaces o captura
 - [ ] **bronze.csv** subido a `data/bronze/`  
       Ruta/commit: data/bronze/bronze.csv
 - [ ] **silver.csv** subido a `data/silver/`  
-      Ruta/commit: ________________________________________________________
+      Ruta/commit: data/silver/silver.csv
 
 ## 3) Documentación principal
 - [ ] **README** con decisiones justificadas, conectando las **5V del Big Data** con las elecciones del diseño  
