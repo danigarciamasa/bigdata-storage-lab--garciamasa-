@@ -120,3 +120,23 @@ Responde en este mismo README o en un archivo aparte, en 3–5 líneas máximo c
 ---
 
 ✍️ **Instrucción:** Personaliza `<apellido>` en el nombre del repo antes de publicar.
+
+## 🧠 Prompts de Reflexión
+
+Responde a cada punto en 3–5 líneas máximo, justificando con base en tu diseño y datos del laboratorio.
+
+1. **V dominante hoy y V dominante si 2× tráfico**  
+   - Respuesta: ________________________________________________
+
+2. **Trade-off elegido (ej.: más compresión vs CPU)**  
+   - Respuesta: ________________________________________________
+
+3. **Por qué “inmutable + linaje” mejora veracidad y qué coste añade**  
+   - Respuesta: ________________________________________________
+
+4. **KPI principal y SLA del dashboard (latencia)**  
+   - Respuesta: ________________________________________________
+
+5. **Riesgo principal del diseño y mitigación técnica concreta**  
+   - Respuesta: ________________________________________________
+
