@@ -1,14 +1,11 @@
 # streamlit_app.py
-# App Streamlit sobria para ingesta, normalización, linaje, validación y agregación por mes.
+# App Streamlit para ingesta, normalización, linaje, validación y agregación por mes.
 # Requiere: streamlit, pandas, pyarrow, python-dateutil
 from __future__ import annotations
 
-
-import io
-from typing import Dict, List, Tuple
-
 import pandas as pd
 import streamlit as st
+from typing import Dict, List, Tuple
 
 # Importa funciones del pipeline
 from src.transform import normalize_columns, to_silver
@@ -33,7 +30,6 @@ def read_csv_safely(file) -> pd.DataFrame:
 def build_mapping(src_date: str, src_partner: str, src_amount: str, df_cols: List[str]) -> Dict[str, str]:
     """
     Construye mapping origen->canónico validando que existan en el DataFrame.
-    No lanza excepción: el renombrado en normalize_columns añadirá NA si falta algo.
     """
     mapping: Dict[str, str] = {}
     if src_date in df_cols:
@@ -74,7 +70,7 @@ uploaded_files = st.file_uploader(
 )
 
 if not uploaded_files:
-    st.info("Sube archivos para iniciar el flujo.")
+    st.info("👆 Sube archivos para iniciar el flujo.")
     st.stop()
 
 bronze_frames: List[pd.DataFrame] = []
@@ -97,8 +93,16 @@ for uf in uploaded_files:
         # Tag de linaje
         df_tagged = tag_lineage(df_norm, source_name=uf.name)
 
-        # Validación
-        errors = basic_checks(df_tagged[["date", "partner", "amount"]])
+        # ✅ Validación segura
+        needed = ["date", "partner", "amount"]
+        present = [c for c in needed if c in df_tagged.columns]
+        missing = [c for c in needed if c not in df_tagged.columns]
+
+        if missing:
+            st.error(f"Columnas canónicas faltantes: {missing}. Revisa el mapping en la barra lateral.")
+            errors = [f"Faltan columnas: {missing}"]
+        else:
+            errors = basic_checks(df_tagged[needed])
 
         # Guardar para bronze
         bronze_frames.append(df_tagged)
@@ -118,25 +122,32 @@ for uf in uploaded_files:
 bronze = concat_bronze([fr for _, _, fr in file_reports])
 
 st.subheader("Tabla bronze unificada")
-st.dataframe(bronze, use_container_width=True)
+st.dataframe(bronze, width="stretch")
 
 # Validaciones globales
-global_errors = basic_checks(bronze[["date", "partner", "amount"]])
+needed = ["date", "partner", "amount"]
+global_errors = []
+missing_global = [c for c in needed if c not in bronze.columns]
+
+if missing_global:
+    global_errors = [f"Faltan columnas: {missing_global}"]
+else:
+    global_errors = basic_checks(bronze[needed])
+
 if global_errors:
     st.error("Errores globales de validación en bronze. Corrige antes de derivar a silver:")
     for e in global_errors:
         st.write(f"- {e}")
-    # Descargas de bronze aún disponibles para depurar
 else:
     st.success("Bronze válido. Derivando a silver...")
 
 # KPI simples sobre bronze
 st.markdown("### KPIs de calidad (bronze)")
 total_rows = len(bronze)
-valid_date = bronze["date"].notna().sum()
-valid_partner = bronze["partner"].notna().sum()
-valid_amount = bronze["amount"].notna().sum()
-non_negative = (pd.to_numeric(bronze["amount"], errors="coerce") >= 0).sum()
+valid_date = bronze["date"].notna().sum() if "date" in bronze else 0
+valid_partner = bronze["partner"].notna().sum() if "partner" in bronze else 0
+valid_amount = bronze["amount"].notna().sum() if "amount" in bronze else 0
+non_negative = (pd.to_numeric(bronze.get("amount", pd.Series(dtype=float)), errors="coerce") >= 0).sum()
 
 kpi_df = pd.DataFrame(
     {
@@ -153,11 +164,11 @@ kpi_df = pd.DataFrame(
 st.table(kpi_df)
 
 # Si bronze válido, generar silver
-if not global_errors and total_rows > 0:
-    silver = to_silver(bronze[["date", "partner", "amount"]])
+if not global_errors and total_rows > 0 and all(c in bronze.columns for c in needed):
+    silver = to_silver(bronze[needed])
 
     st.subheader("Tabla silver: agregación por partner y mes")
-    st.dataframe(silver, use_container_width=True)
+    st.dataframe(silver, width="stretch")
 
     # KPIs simples sobre silver
     st.markdown("### KPIs (silver)")
@@ -182,8 +193,7 @@ if not global_errors and total_rows > 0:
     # Gráfico de barras: mes vs amount (total por mes)
     st.markdown("### Gráfico: amount total por mes")
     by_month = silver.groupby("month", as_index=False)["amount"].sum().sort_values("month")
-    # Streamlit usará su charting interno; no colores personalizados.
-    st.bar_chart(data=by_month, x="month", y="amount", use_container_width=True)
+    st.bar_chart(data=by_month, x="month", y="amount", width="stretch")
 
     # Descargas
     st.markdown("### Descargas")
