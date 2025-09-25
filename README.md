@@ -164,3 +164,19 @@ Riesgo: inconsistencias en los nombres de columnas y formatos de origen que romp
 Mitigación: usar mapeo dinámico en la app, validaciones tempranas y normalización robusta en Bronze.
 
 Así los errores se detectan antes de llegar a Silver/Gold y no contaminan el análisis.
+
+| V prioritaria | Elecciones (Ingesta / Storage / Compute / Analítica) | Riesgos clave | Mitigaciones | Métrica de éxito |
+|---------------|------------------------------------------------------|---------------|--------------|------------------|
+| [Escribe aquí la V dominante: Volumen / Velocidad / Variedad / Veracidad / Valor] | - Ingesta: ...  <br>- Storage: ...  <br>- Compute: ...  <br>- Analítica: ... | [Principales riesgos del caso] | [Cómo reducir los riesgos] | [Indicador para evaluar el éxito] |
+| V prioritaria | Elecciones (Ingesta / Storage / Compute / Analítica) | Riesgos clave | Mitigaciones | Métrica de éxito |
+|---------------|------------------------------------------------------|---------------|--------------|------------------|
+| Variedad | - Ingesta: CSVs heterogéneos de pedidos <br>- Storage: Parquet para estandarizar <br>- Compute: Pandas / PySpark para normalización <br>- Analítica: KPIs de ventas mensuales y por partner | Diferencias de formato en columnas (fechas, importes) | Normalización canónica y validaciones de esquema | % de registros válidos sin errores de mapping (>95%) |
+
+| V prioritaria | Elecciones (Ingesta / Storage / Compute / Analítica) | Riesgos clave | Mitigaciones | Métrica de éxito |
+|---------------|------------------------------------------------------|---------------|--------------|------------------|
+| Velocidad | - Ingesta: micro-batches de 60s / 60min <br>- Storage: particionado temporal en Parquet <br>- Compute: procesamiento en streaming (Spark Structured Streaming / Flink) <br>- Analítica: detección de anomalías en tiempo cercano al real | Retrasos en llegada de datos y cuellos de botella en escritura | Buffer de ingesta y escalado horizontal en nodos de streaming | Latencia media de procesamiento < 5s por evento |
+
+| V prioritaria | Elecciones (Ingesta / Storage / Compute / Analítica) | Riesgos clave | Mitigaciones | Métrica de éxito |
+|---------------|------------------------------------------------------|---------------|--------------|------------------|
+| Veracidad | - Ingesta: logs transaccionales inmutables <br>- Storage: almacenamiento seguro con linaje (bronze/silver/gold) <br>- Compute: reglas + modelos de ML supervisados <br>- Analítica: dashboards de fraude y alertas en tiempo real | Falsos positivos/negativos y pérdida de trazabilidad | Uso de linaje, auditoría de reglas y entrenamiento continuo de modelos | Tasa de detección de fraude >90% y tasa de falsos positivos <5% |
+
