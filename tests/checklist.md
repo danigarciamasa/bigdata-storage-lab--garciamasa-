@@ -15,7 +15,7 @@ Marque cada casilla al completar el punto. Incluya evidencias (enlaces o captura
 ## 3) Documentación principal
 - [ ] **README** con decisiones justificadas, conectando las **5V del Big Data** con las elecciones del diseño  
       (Ingesta, Validación, Normalización, Bronze/Silver, KPIs)  
-      Link al README: _____________________________________________________
+      Link al README: README.md
 - [ ] **Capturas** de la app (pantallas clave) guardadas en `docs/`  
       (Subida de CSV, Validaciones, Bronze, Silver, KPIs/Gráfico)  
       Rutas/commit: _______________________________________________________
