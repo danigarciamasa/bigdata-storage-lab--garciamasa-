@@ -19,14 +19,21 @@ def concat_bronze(frames: List[pd.DataFrame]) -> pd.DataFrame:
     """
     Concatena múltiples DataFrames Bronze y asegura el esquema:
     date, partner, amount, source_file, ingested_at.
+    Si alguna columna falta, se crea vacía para evitar KeyError.
     """
+    cols = ["date", "partner", "amount", "source_file", "ingested_at"]
+
     if not frames:
-        return pd.DataFrame(columns=["date", "partner", "amount", "source_file", "ingested_at"])
+        return pd.DataFrame(columns=cols)
 
     bronze = pd.concat(frames, ignore_index=True)
 
-    # Reordenar columnas según esquema
-    cols = ["date", "partner", "amount", "source_file", "ingested_at"]
+    # Asegurar que todas las columnas existen
+    for c in cols:
+        if c not in bronze.columns:
+            bronze[c] = pd.NA
+
+    # Reordenar según el esquema estándar
     bronze = bronze[cols]
 
     return bronze
