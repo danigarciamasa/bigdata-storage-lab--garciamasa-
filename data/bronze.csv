@@ -1,5 +1,0 @@
-date,partner,amount,source_file,ingested_at
-2025-05-01,Partner_A,12005,ventas_mes.csv,2025-09-25T12:23:25.978018+00:00
-2025-05-15,Partner_B,85075,ventas_mes.csv,2025-09-25T12:23:25.978018+00:00
-2025-05-20,Partner_A,4300,ventas_mes.csv,2025-09-25T12:23:25.978018+00:00
-2025-05-28,Partner_C,99999,ventas_mes.csv,2025-09-25T12:23:25.978018+00:00
