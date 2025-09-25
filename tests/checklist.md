@@ -4,7 +4,7 @@ Marque cada casilla al completar el punto. Incluya evidencias (enlaces o captura
 
 ## 1) Despliegue
 - [ ] **URL Streamlit funcional** (pública en Streamlit Community Cloud)  
-      Link: _______________________________________________________________
+      Link: https://fadfrnxwlxppcylkr8uqho.streamlit.app/
 
 ## 2) Artefactos de datos
 - [ ] **bronze.csv** subido a `data/bronze/`  
