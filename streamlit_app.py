@@ -1,7 +1,8 @@
 # streamlit_app.py
 # App Streamlit sobria para ingesta, normalización, linaje, validación y agregación por mes.
 # Requiere: streamlit, pandas, pyarrow, python-dateutil
-from _future_ import annotations
+from __future__ import annotations
+
 
 import io
 from typing import Dict, List, Tuple
